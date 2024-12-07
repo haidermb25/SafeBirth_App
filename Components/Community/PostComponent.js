@@ -160,8 +160,8 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: "row",
     justifyContent: "space-between", // Adjusted to have space between stars and send button
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
     paddingVertical: 10,
     flexWrap: "wrap", // Allow wrapping for small screens
   },
@@ -169,21 +169,21 @@ const styles = StyleSheet.create({
     width: 50,
   },
   averageRatingText: {
-    fontSize: 16,
+    fontSize: 20,
     color: "green",
     fontWeight: "bold",
   },
   starsContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   sendButton: {
     backgroundColor: "rgba(52, 167, 81, 0.9)", // Green color for the Send button
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    borderRadius: 12,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
     marginTop: 10,
   },
   sendButtonText: {

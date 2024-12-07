@@ -27,7 +27,7 @@ const PostUploadComponent = ({ onNewPost }) => {
   //Image Picker
   const HandleImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.mediaType.All,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
@@ -69,22 +69,10 @@ const PostUploadComponent = ({ onNewPost }) => {
     });
   };
   const handlePostSubmit = async () => {
-    const uri = postImage;
-    
-    // Convert the image URI to a blob
-    const file = await fetch(uri);
-    const blob = await file.blob();
-    
-    // Create FormData for the image
-    const formData = new FormData();
-    formData.append("image", blob, "image.jpg");  // The second argument is the filename you want to use
-    
-    // Prepare the post text
-    const post_text = postText;
-    
     // Call addPost and await the result
-    const response = await addPost(post_text, formData);
-    
+    console.log(postImage);
+    const response = await addPost(postText, postImage);
+
     // Handle success or failure
     if (response) {
       alert("Post Uploaded Successfully!");
@@ -92,7 +80,6 @@ const PostUploadComponent = ({ onNewPost }) => {
       alert("There is some Problem!");
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -102,7 +89,7 @@ const PostUploadComponent = ({ onNewPost }) => {
           style={styles.avatar}
           source={{ uri: "https://via.placeholder.com/50" }} // Avatar image URL
         />
-        <Text style={styles.userName}>New User</Text>
+        <Text style={styles.userName}>New Post</Text>
       </View>
 
       {/* Post Text Input */}

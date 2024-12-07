@@ -1,146 +1,131 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import React from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-// Sample notifications data
-const NotificationsComponent = [
-  { id: '1', title: 'New message from John', description: 'Hey, are you available for a meeting tomorrow?', time: '2 hours ago' },
-  { id: '2', title: 'New comment on your post', description: 'Anna commented on your post: "Great photo!"', time: '3 hours ago' },
-  { id: '3', title: 'Friend request from Mike', description: 'Mike has sent you a friend request.', time: '1 day ago' },
-  { id: '4', title: 'Reminder: Meeting at 2 PM', description: 'Don’t forget about your meeting today.', time: '1 hour ago' },
-  { id: '5', title: 'New like on your photo', description: 'You received a like from Sarah on your recent post.', time: '5 minutes ago' },
-];
-
-const NotificationScreen = () => {
-  // State to keep track of selected notification
-  const [selectedNotification, setSelectedNotification] = useState(null);
-
-  // Render individual notification item
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.notificationCard}
-      onPress={() => setSelectedNotification(item)}
-    >
-      <View style={styles.notificationContent}>
-        <Image
-          style={styles.avatar}
-          source={{ uri: 'https://via.placeholder.com/50' }}
-        />
-        <View style={styles.notificationText}>
-          <Text style={styles.notificationTitle}>{item.title}</Text>
-          <Text style={styles.notificationDescription}>{item.description}</Text>
-          <Text style={styles.notificationTime}>{item.time}</Text>
-        </View>
+const NotificationsComponent = ({
+  postNumber,
+  averageRating,
+  imageSource,
+  postText,
+  created_date,
+  isActive,
+  userName,
+}) => {
+  return (
+    <TouchableOpacity style={styles.card}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.postNumber}>Post #{postNumber}</Text>
+        <Text style={styles.rating}>⭐ {averageRating}</Text>
+      </View>
+      <View style={styles.imageContainer}>
+        {imageSource ? (
+          <Image source={{ uri: imageSource }} style={styles.image} />
+        ) : null}
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.username}></Text>
+        {postText ? <Text style={styles.postText}>{postText}</Text> : null}
+        <Text style={styles.date}>{created_date}</Text>
+        <TouchableOpacity
+          style={[
+            styles.statusButton,
+            isActive ? styles.activeStatus : styles.inactiveStatus,
+          ]}
+        >
+          <Text style={styles.statusText}>
+            {isActive ? "Active" : "Inactive"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
-  );
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Notifications</Text>
-
-      {/* Notifications List */}
-      <FlatList
-        data={notificationsData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-      />
-
-      {/* Display selected notification details */}
-      {selectedNotification && (
-        <View style={styles.selectedNotificationContainer}>
-          <Text style={styles.selectedNotificationTitle}>{selectedNotification.title}</Text>
-          <Text style={styles.selectedNotificationDescription}>{selectedNotification.description}</Text>
-          <Text style={styles.selectedNotificationTime}>{selectedNotification.time}</Text>
-        </View>
-      )}
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    paddingTop: 20,
-    paddingHorizontal: 15,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  listContainer: {
-    paddingBottom: 80, // For safe area
-  },
-  notificationCard: {
-    backgroundColor: '#fff',
+  card: {
+    backgroundColor: "#fff",
     borderRadius: 10,
-    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 10,
+    elevation: 5,
+    margin: 10,
+    marginRight: 30,
     padding: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    overflow: "hidden",
+    width: 320,
+    alignSelf: "center",
   },
-  notificationContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  imageContainer: {
+    marginTop: 40,
   },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 15,
-  },
-  notificationText: {
-    flex: 1,
-  },
-  notificationTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  notificationDescription: {
-    fontSize: 14,
-    color: '#777',
-    marginTop: 5,
-  },
-  notificationTime: {
-    fontSize: 12,
-    color: '#aaa',
-    marginTop: 5,
-  },
-  selectedNotificationContainer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 15,
-    right: 15,
-    backgroundColor: '#fff',
+  headerContainer: {},
+  image: {
+    width: "100%",
+    height: 180,
     borderRadius: 10,
-    padding: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    marginBottom: 10,
+    opacity: 0.8,
   },
-  selectedNotificationTitle: {
+  postNumber: {
+    position: "absolute",
+    top: 0,
+    left: 10,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "#333",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 5,
   },
-  selectedNotificationDescription: {
+  rating: {
+    position: "absolute",
+    top: 0,
+    right: 10,
     fontSize: 16,
-    color: '#555',
+    color: "#f39c12",
+  },
+  content: {
+    paddingHorizontal: 10,
     marginTop: 10,
   },
-  selectedNotificationTime: {
+  username: {
+    fontSize: 16,
+    color: "#555",
+    marginTop: 5,
+  },
+  postText: {
     fontSize: 14,
-    color: '#888',
+    color: "#333",
+    marginTop: -35,
+  },
+  date: {
+    fontSize: 12,
+    color: "#999",
     marginTop: 10,
+    fontStyle: "italic",
+  },
+  statusButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+    marginLeft: 20,
+    alignSelf: "flex-end",
+    marginRight: -16,
+  },
+  activeStatus: {
+    backgroundColor: "#2ecc71",
+  },
+  inactiveStatus: {
+    backgroundColor: "#e74c3c",
+  },
+  statusText: {
+    fontSize: 14,
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 

@@ -11,19 +11,10 @@ import PostComponent from "../../Components/Community/PostComponent.js";
 import { useNavigation } from "@react-navigation/native";
 import { GetAllPosts } from "../../Api/AllPosts.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import Ionicons from "react-native-vector-icons/Ionicons";
 const App = () => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]); // Initialize as an empty array
-  const demoPosts = [
-    {
-      userImage: "https://via.placeholder.com/50",
-      userName: "John Doe",
-      postText: "This is a sample post text by John.",
-      postImage: "https://via.placeholder.com/500",
-    },
-    // Add other demo posts if needed...
-  ];
   useEffect(() => {
     const getPosts = async () => {
       try {
@@ -47,9 +38,14 @@ const App = () => {
   return (
     <View style={styles.demoContainer}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("Dashboard")}>
-          <Text style={styles.headerTitle}>Community</Text>
-        </TouchableOpacity>
+        <View style={styles.goBack}>
+          <TouchableOpacity onPress={() => navigation.navigate("Dashboard")}>
+            <Ionicons name="arrow-back-outline" size={30} color="white" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.Community}>
+          <Text style={styles.headerTitle}>Safe Birth Community</Text>
+        </View>
       </View>
 
       <View style={styles.filterContainer}>
@@ -100,6 +96,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   headerTitle: {
+    marginRight: 10,
     fontSize: 24,
     fontWeight: "bold",
     color: "#ffffff",

@@ -1,4 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -13,12 +17,13 @@ import DietPlanCard from "../../Components/PLANS/DietPlanCard";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getUserData from "../../Api/Dashboard";
-
+import { useName } from "../../Api/ContextApi";
 const Dashboard = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const { name } = useName();
   return (
     <View style={styles.container}>
       {/* Top Bar */}
@@ -54,7 +59,8 @@ const Dashboard = () => {
                 />
               </TouchableOpacity>
               <Text style={styles.profileName}>
-                {AsyncStorage.getItem("name")}
+                {name.split(" ")[0].charAt(0).toUpperCase() +
+                  name.split(" ")[0].slice(1).toLowerCase()}
               </Text>
             </View>
             <View style={styles.IconSection}>
@@ -70,19 +76,22 @@ const Dashboard = () => {
                 />
               </TouchableOpacity>
               <View style={styles.iconBorder}>
-                <Ionicons
-                  name="notifications-outline"
-                  size={30}
-                  color="black"
-                  style={styles.icons}
+                {/* <TouchableOpacity
                   onPress={async () => {
                     await AsyncStorage.removeItem("userId");
                     await AsyncStorage.removeItem("userid");
                     await AsyncStorage.removeItem("name");
                     await AsyncStorage.removeItem("username");
-                    navigation.navigate("LoginPage");
+
+                    navigation.navigate("Login");
                   }}
+                > */}
+                <Ionicons
+                  name="notifications-outline"
+                  size={30}
+                  color="black"
                 />
+                {/* </TouchableOpacity> */}
               </View>
             </View>
           </>
@@ -93,7 +102,7 @@ const Dashboard = () => {
       {!isSearching && (
         <View style={styles.ImageCard}>
           <View style={styles.ImageCardText}>
-            <Text style={styles.cardHeading}>Looking for desired doctor?</Text>
+            <Text style={styles.cardHeading}>Looking for desired plan?</Text>
             <TouchableOpacity
               style={styles.searchButton}
               onPress={() => setIsSearching(true)}

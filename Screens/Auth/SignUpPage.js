@@ -13,7 +13,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Dropdown } from "react-native-element-dropdown";
 import Toast from "react-native-toast-message";
-
+import { Ionicons } from "@expo/vector-icons";
+import CheckBox from "expo-checkbox";
 export default SignUp = () => {
   const [name, setName] = useState("");
   const [username, setusername] = useState("");
@@ -21,6 +22,8 @@ export default SignUp = () => {
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [IsDisabledButton, setIsDisabledButton] = useState(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
 
   const pickerItems = [
     { label: "Male", value: "Male" },
@@ -28,6 +31,12 @@ export default SignUp = () => {
   ];
   const navigation = useNavigation();
 
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+  const toggleCheckbox = () => {
+    setIsSelected(!isSelected); // Toggle the checkbox selection state
+  };
   const validateEmail = () => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
@@ -42,11 +51,11 @@ export default SignUp = () => {
     }
     return true;
   };
-
   const validateUserName = () => {
     if (username.length <= 1) return false;
     if (/\s/.test(username)) return false;
     if (!/^[a-z0-9]+$/.test(username)) return false;
+    if (/^\d+$/.test(username)) return false;
 
     return true;
   };
@@ -153,7 +162,7 @@ export default SignUp = () => {
       />
       <TextInput
         style={styles.input}
-        placeholder="username"
+        placeholder="User Name"
         placeholderTextColor="#C7C7CD"
         value={username}
         onChangeText={setusername}
@@ -166,14 +175,27 @@ export default SignUp = () => {
         value={email}
         onChangeText={setEmail}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#C7C7CD"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputField}
+          placeholder="**************"
+          placeholderTextColor="#C7C7CD"
+          secureTextEntry={!isPasswordVisible}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity
+          onPress={togglePasswordVisibility}
+          style={styles.icon}
+        >
+          <Ionicons
+            name={isPasswordVisible ? "eye-off" : "eye"}
+            size={20}
+            color="#C7C7CD"
+          />
+        </TouchableOpacity>
+      </View>
+
       <Dropdown
         data={pickerItems}
         labelField="label"
@@ -189,7 +211,25 @@ export default SignUp = () => {
           <AntDesign name="down" size={16} color="#B4B6B8" />
         )}
       />
-
+      <View style={styles.checkboxContainer}>
+        <View>
+          <CheckBox
+            value={isSelected}
+            onValueChange={toggleCheckbox}
+            style={styles.checkbox}
+          />
+        </View>
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>I understood the </Text>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Terms");
+            }}
+          >
+            <Text style={styles.labelLink}>terms & policy</Text>
+          </Pressable>
+        </View>
+      </View>
       <TouchableOpacity
         style={[
           styles.signUpButton,
@@ -200,12 +240,16 @@ export default SignUp = () => {
       >
         <Text style={styles.signUpButtonText}>SIGN UP</Text>
       </TouchableOpacity>
-      <Text style={styles.signInText}>
-        Have an account?{" "}
-        <Pressable onPress={() => navigation.goBack()}>
-          <Text style={styles.signInLink}>SIGN IN</Text>
+      <View style={styles.loginContainer}>
+        <Text style={styles.signUpText}>Don’t have an account?</Text>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+        >
+          <Text style={styles.signUpLink}>Login</Text>
         </Pressable>
-      </Text>
+      </View>
       <Toast />
     </View>
   );
@@ -239,13 +283,35 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: 50,
-    borderColor: "#E5E5E5",
     borderWidth: 1,
+    borderColor: "#ddd",
     borderRadius: 8,
     paddingHorizontal: 15,
     marginBottom: 15,
     backgroundColor: "#F6F6F6",
-    color: "#000",
+    color: "#333",
+    fontSize: 16,
+  },
+  inputContainer: {
+    width: "100%",
+    height: 50,
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    marginBottom: 20,
+    backgroundColor: "#F6F6F6",
+  },
+  inputField: {
+    flex: 1,
+    height: "100%",
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: "#333",
+  },
+  icon: {
+    paddingHorizontal: 10,
   },
   selectionInput: {
     width: "100%",
@@ -289,10 +355,41 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  signInText: {
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    marginRight: 80,
+    justifyContent: "flex-start",
+  },
+  checkbox: {
+    marginRight: 10,
+    borderColor: "#00C781",
+    transform: [{ scale: 0.8 }],
+  },
+  labelContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  labelLink: {
+    color: "#00C781",
+    fontWeight: 700,
+  },
+  label: {
+    fontSize: 15,
+  },
+  loginContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  signUpText: {
+    fontSize: 14,
     color: "#A1A1A1",
   },
-  signInLink: {
+  signUpLink: {
+    fontSize: 14,
     color: "#00C781",
     fontWeight: "bold",
   },

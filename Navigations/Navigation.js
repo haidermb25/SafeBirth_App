@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, TouchableOpacity } from "react-native";
+import { Image, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
 import Splash from "../Screens/Auth/Splash";
 import Login from "../Screens/Auth/LoginPage";
@@ -13,7 +13,8 @@ import NewPosts from "../Screens/CommunitySupport/NewPosts";
 import UploadPost from "../Screens/CommunitySupport/UploadPost";
 import PostsAnalysis from "../Screens/CommunitySupport/PostsAnalysis";
 import Profile from "../Screens/Dashboards/Profile";
-import ContentPosts from "../Screens/Content Management/ContentPosts";
+import ContentPosts from "../Screens/Content Management/EducationContent";
+import PrivacyPolicyScreen from "../Screens/Auth/Terms&Policy";
 // Stack Navigations
 const Stack = createNativeStackNavigator();
 function StackNavigations() {
@@ -45,6 +46,11 @@ function StackNavigations() {
         options={{ headerShown: false, contentStyle: { paddingTop: 20 } }}
       />
       <Stack.Screen
+        name="Terms"
+        component={PrivacyPolicyScreen}
+        options={{ headerShown: false, contentStyle: { paddingTop: 20 } }}
+      />
+      <Stack.Screen
         name="DrawerNavigation"
         component={DrawerNavigation}
         options={{ headerShown: false, contentStyle: { paddingTop: 20 } }}
@@ -62,27 +68,41 @@ function CommunityTabNavigation() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           let iconName;
-          let iconColor = focused ? "green" : "gray"; // Icon color
+          let iconColor = focused ? "#4CAF50" : "#888888"; // Green for selected tab, gray for unselected
 
+          // Change the icons to more professional options
           if (route.name === "Posts") {
-            iconName = focused ? "list" : "list-outline";
+            iconName = focused ? "document-text" : "document-text-outline"; // More professional document icon
           } else if (route.name === "Upload") {
-            iconName = focused ? "cloud-upload" : "cloud-upload-outline";
+            iconName = focused ? "cloud-upload-outline" : "cloud-upload-sharp"; // Use the sharp variant for a more solid design
           } else if (route.name === "Analysis") {
-            iconName = focused ? "pie-chart" : "pie-chart-outline";
+            iconName = focused ? "stats-chart" : "stats-chart-outline"; // More analytical-looking icon
           }
 
           return (
             <Ionicons
               name={iconName}
-              size={35} // Larger icon size
+              size={30} // Standard icon size for a professional look
               color={iconColor}
             />
           );
         },
         tabBarShowLabel: false, // Hide the label
         tabBarStyle: {
-          height: 60, // Increase tab bar height to accommodate larger icons
+          height: 70, // Increase tab bar height to accommodate larger icons and a cleaner design
+          backgroundColor: "#FFFFFF", // Use a clean white background
+          borderTopWidth: 1, // Thin border for neatness
+          borderTopColor: "#E5E5E5", // Light border color for soft look
+          shadowColor: "#000", // Shadow color for depth
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1, // Subtle shadow
+          shadowRadius: 4,
+        },
+        tabBarActiveTintColor: "#4CAF50", // Green for the active tab
+        tabBarInactiveTintColor: "#888888", // Gray for inactive tab
+        tabBarLabelStyle: {
+          fontSize: 16, // Increase font size for readability
+          fontWeight: "600", // Semi-bold font for professional look
         },
       })}
     >
@@ -104,9 +124,9 @@ function CommunityTabNavigation() {
     </Tab.Navigator>
   );
 }
+
 // Drawer Navigation
 const Drawer = createDrawerNavigator();
-
 function DrawerNavigation() {
   return (
     <Drawer.Navigator
@@ -146,6 +166,37 @@ function DrawerNavigation() {
         component={ContentPosts}
         options={{ headerShown: false }}
       />
+      {/* Custom Drawer Item for Logout */}
+      <Drawer.Screen
+        name="Logout"
+        component={() => null} // Placeholder, as we handle logout manually
+        options={({ navigation }) => ({
+          drawerLabel: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Login")}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginVertical: 10,
+                marginTop: 350,
+              }}
+            >
+              <Ionicons name="log-out-outline" size={24} color="red" />
+              <Text
+                style={{
+                  marginLeft: 10,
+                  color: "black",
+                  fontSize: 16,
+                  fontWeight: 800,
+                }}
+              >
+                Logout
+              </Text>
+            </TouchableOpacity>
+          ),
+          headerShown: false,
+        })}
+      />
     </Drawer.Navigator>
   );
 }
@@ -154,7 +205,7 @@ function DrawerNavigation() {
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <DrawerNavigation />
+      <StackNavigations />
     </NavigationContainer>
   );
 }
